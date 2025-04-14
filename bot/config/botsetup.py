@@ -27,8 +27,9 @@ class Bot:
         block=False,
         allow_sending_without_reply=True
         )
-        self.app = ApplicationBuilder().token(token).defaults(default_param).post_init(self.post_init).build()
+        self.app = ApplicationBuilder().token(token).defaults(default_param).post_init(self.post_init()).build()
     
+    @staticmethod
     def post_init(func):
         return func
 
