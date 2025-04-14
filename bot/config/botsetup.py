@@ -41,7 +41,7 @@ class Bot:
         
         try:
             # bot commands only for PRIVATE chats
-            await app.set_my_commands(bot_commands, BotCommandScope(BotCommandScope.ALL_PRIVATE_CHATS))
+            await app.bot.set_my_commands(bot_commands, BotCommandScope(BotCommandScope.ALL_PRIVATE_CHATS))
         except Exception as e:
             logger.error(e)
         
