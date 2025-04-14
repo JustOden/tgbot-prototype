@@ -1,8 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from bot import __version__
-from bot.helper.button_maker import ButtonMaker
+from config import __version__, bot, ButtonMaker
 
+
+@bot.command_handler("start")
 async def func_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     effective_message = update.effective_message

@@ -1,8 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from bot import __version__
-from ..helper.button_maker import ButtonMaker
+from config import __version__, bot, ButtonMaker
 
+
+@bot.query_handler("menu")
 async def handle_callbackquery(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     query = update.callback_query
