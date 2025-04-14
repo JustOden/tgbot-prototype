@@ -10,7 +10,7 @@ from telegram.ext import (
     Defaults
 )
 from telegram.constants import ParseMode
-from ..logger import setup_logging
+from .logger import setup_logging
 
 # logger
 logger = setup_logging()

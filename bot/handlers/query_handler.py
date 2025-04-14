@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from config import __version__, bot, ButtonMaker
+from config import __version__, bot
+from helper.button_maker import ButtonMaker
 
 
 @bot.query_handler("menu")

@@ -1,6 +1,5 @@
 from time import time
 from .botsetup import Bot, CONFIG, load_handlers, logger
-from bot.helper.button_maker import ButtonMaker
 
 # constants
 __version__ = "0.1.0.3 (beta)" # major.minor.patch.commits
@@ -23,5 +22,4 @@ Developed by
     Library: python-telegram-bot
     Init Release: Jan 2 2023
     Rebuilt: April 14 2025
-    GitHub: https://github.com/bishalqx980
-""")
+    GitHub: https://github.com/bishalqx980""")
