@@ -1,14 +1,10 @@
 from time import time
-from .botsetup import Bot, CONFIG, load_handlers
-from ..logger import setup_logging
+from .botsetup import Bot, CONFIG, load_handlers, logger
 from bot.helper.button_maker import ButtonMaker
 
 # constants
 __version__ = "0.1.0.3 (beta)" # major.minor.patch.commits
 BOT_UPTIME = time()
-
-# logger
-logger = setup_logging()
 
 # Main bot function
 bot = Bot(CONFIG.BOT_TOKEN)

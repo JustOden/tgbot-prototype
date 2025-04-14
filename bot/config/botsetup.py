@@ -10,7 +10,10 @@ from telegram.ext import (
     Defaults
 )
 from telegram.constants import ParseMode
-from ...bot import logger
+from ..logger import setup_logging
+
+# logger
+logger = setup_logging()
 
 
 class CONFIG:
@@ -28,7 +31,7 @@ class Bot:
         block=False,
         allow_sending_without_reply=True
         )
-        self.app = ApplicationBuilder().token(token).defaults(default_param).post_init(self.post_init()).build()
+        self.app = ApplicationBuilder().token(token).defaults(default_param).post_init(self.post_init).build()
     
     @staticmethod
     async def post_init(app):
