@@ -1,11 +1,12 @@
-from telegram import Update
+from telegram import Update, BotCommandScope
 from telegram.ext import ContextTypes
 from config import __version__, bot
 from helper.button_maker import ButtonMaker
 
 
-@bot.command_handler("start")
-async def func_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@bot.command_handler(scope=BotCommandScope.ALL_PRIVATE_CHATS)
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Introducing..."""
     user = update.effective_user
     effective_message = update.effective_message
 

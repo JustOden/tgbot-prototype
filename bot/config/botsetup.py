@@ -22,7 +22,7 @@ class CONFIG:
 
 
 class Bot:
-    commands: list[tuple[str, str]] = []
+    commands: list[tuple[str, BotCommand]] = []
 
     def __init__(self, token: str):
         default_param = Defaults(
@@ -35,13 +35,15 @@ class Bot:
     
     @staticmethod
     async def post_init(app):
-        bot_commands = [
-        BotCommand("start", "Introducing...")
-        ]
-        
+        grouped_commands: dict[str, list[BotCommand]] = {scope: [] for scope, _ in Bot.commands}
+
+        for scope, command in Bot.commands:
+            grouped_commands[scope].append(command)
+
         try:
-            # bot commands only for PRIVATE chats
-            await app.bot.set_my_commands(bot_commands, BotCommandScope(BotCommandScope.ALL_PRIVATE_CHATS))
+            for key, val in grouped_commands.items():
+                await app.bot.set_my_commands(val, BotCommandScope(key))
+                
         except Exception as e:
             logger.error(e)
         
@@ -53,12 +55,12 @@ class Bot:
             return func
         return decorator
 
-    def command_handler(self, command_name: str="", description: str=""):
+    def command_handler(self, command_name: str="", description: str="", scope: BotCommandScope = None):
         def decorator(func: Callable):
             name = command_name or func.__name__
             handler = CommandHandler(name, func)
             self.app.add_handler(handler)
-            self.commands.append((name, description or func.__doc__ or "No description provided"))
+            self.commands.append((scope, BotCommand(name, description or func.__doc__ or "No description provided")))
             return func
         return decorator
 
