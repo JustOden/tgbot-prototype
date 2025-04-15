@@ -55,7 +55,7 @@ class Bot:
             return func
         return decorator
 
-    def command_handler(self, command_name: str="", description: str="", scope: BotCommandScope = None):
+    def command_handler(self, command_name="", description="", scope=BotCommandScope.DEFAULT):
         def decorator(func: Callable):
             name = command_name or func.__name__
             handler = CommandHandler(name, func)
@@ -64,7 +64,7 @@ class Bot:
             return func
         return decorator
 
-    def query_handler(self, query_name: str=""):
+    def query_handler(self, query_name=""):
         def decorator(func: Callable):
             name = query_name or func.__name__
             handler = CallbackQueryHandler(func, f"{name}_[A-Za-z0-9]+")
