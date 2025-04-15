@@ -1,7 +1,8 @@
 import os
 import importlib
+from enum import Enum, auto
 from typing import Callable
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackQueryHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ConversationHandler, filters, CallbackQueryHandler
 from telegram import Update, LinkPreviewOptions, BotCommand, BotCommandScope
 from telegram.ext import (
     ApplicationBuilder,
@@ -19,6 +20,12 @@ logger = setup_logging()
 class CONFIG:
     BOT_TOKEN = "" # STR
     OWNER_ID = 123 # INT
+
+
+class EntryType(Enum):
+    COMMANDHANDLER = auto()
+    QUERYHANDLER = auto()
+    MESSAGEHANDLER = auto()
 
 
 class Bot:
@@ -75,6 +82,38 @@ class Bot:
     def message_handler(self, msg_filter=filters.ALL):
         def decorator(func: Callable):
             handler = MessageHandler(msg_filter, func)
+            self.app.add_handler(handler)
+            return func
+        return decorator
+    
+    def conversation_handler(self, entry_type: EntryType, states: dict, fallbacks: list, cmd_name: str="", extra_entry_points: list|None=None, scope=BotCommandScope.DEFAULT, msg_filter=None):
+        """Decorated function will be first entry point. You can add additional entry points.
+        For CommandHandler, cmd_name (or function's name by default) will be the name of the command. 
+        For CallBackQueryHandler, cmd_name (or function's name by default) will
+        be the regex match pattern (ex. f"{cmd_name}_[A-Za-z0-9]+"). Uses an Enum for entry_type.
+        'from config import EntryType'
+        """
+        def decorator(func: Callable):
+
+            if entry_type == EntryType.COMMANDHANDLER:
+                name = cmd_name or func.__name__
+                cmd_handler = CommandHandler(name, func, msg_filter)
+                entry_points = [cmd_handler] + extra_entry_points if extra_entry_points else [cmd_handler]
+                self.commands.append((scope, BotCommand(name, func.__doc__ or "No description provided")))
+            
+            elif entry_type == EntryType.QUERYHANDLER:
+                name = cmd_name or func.__name__
+                query_handler = CallbackQueryHandler(func, f"{name}_[A-Za-z0-9]+")
+                entry_points = [query_handler] + extra_entry_points if extra_entry_points else [query_handler]
+            
+            elif entry_type == EntryType.MESSAGEHANDLER:
+                msg_handler = MessageHandler(msg_filter, func)
+                entry_points = [msg_handler] + extra_entry_points if extra_entry_points else [msg_handler]
+            
+            else:
+                raise TypeError("Invalid entry type")
+
+            handler = ConversationHandler(entry_points=entry_points, states=states, fallbacks=fallbacks)
             self.app.add_handler(handler)
             return func
         return decorator

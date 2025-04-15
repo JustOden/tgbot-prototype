@@ -1,5 +1,5 @@
 from time import time
-from .botsetup import Bot, CONFIG, load_handlers, logger
+from .botsetup import Bot, CONFIG, load_handlers, logger, EntryType
 
 # constants
 __version__ = "0.1.0.3 (beta)" # major.minor.patch.commits
